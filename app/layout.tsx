@@ -34,7 +34,7 @@ const liShobujNolua = localFont({
 })
 
 export const metadata: Metadata = {
-  title: "v0 App",
+  title: "রিপোর্ট বই",
   description: "Created with v0",
   generator: "v0.app",
 }
