@@ -6,7 +6,7 @@ A comprehensive web application for tracking daily activities, setting goals, an
 ![React](https://img.shields.io/badge/React-19-blue?style=for-the-badge&logo=react)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=for-the-badge&logo=typescript)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.1.9-38B2AC?style=for-the-badge&logo=tailwind-css)
-![Supabase](https://img.shields.io/badge/Supabase-Real-time%20Database-3ECF8E?style=for-the-badge&logo=supabase)
+![Supabase](https://img.shields.io/badge/Supabase-Open%20Source%20Backend-3ECF8E?style=for-the-badge&logo=supabase)
 
 ## ✨ Features
 
