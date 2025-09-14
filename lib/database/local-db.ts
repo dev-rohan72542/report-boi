@@ -111,8 +111,8 @@ export class LocalDatabase extends Dexie {
     
     // Only initialize database if we're in a browser environment
     if (isBrowser) {
-      this.version(1).stores({
-        daily_entries: 'id, user_id, entry_date, sync_status, last_modified',
+      this.version(2).stores({
+        daily_entries: 'id, [user_id+entry_date], user_id, entry_date, sync_status, last_modified',
         goals: 'id, user_id, sync_status, last_modified',
         profiles: 'id, sync_status, last_modified',
         sync_queue: 'id, table, action, created_at'

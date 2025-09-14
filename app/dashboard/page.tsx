@@ -1,47 +1,58 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { createClient } from "@/lib/supabase/client"
 import { DailyEntryForm } from "@/components/daily-entry-form"
 import { OfflineIndicator } from "@/components/offline-indicator"
+import { HybridDataService } from "@/lib/services/hybrid-data-service"
+import { User } from "@supabase/supabase-js"
 
 export default function DashboardPage() {
-  const [user, setUser] = useState<any>(null)
+  const [user, setUser] = useState<User | null>(null)
   const [todayEntry, setTodayEntry] = useState<any>(null)
   const [loading, setLoading] = useState(true)
-  const supabase = createClient()
+  const dataService = new HybridDataService()
 
   useEffect(() => {
-    checkUser()
-  }, [])
+    const loadDashboardData = async () => {
+      if (typeof window === 'undefined') return; // Ensure this runs only on client
 
-  const checkUser = async () => {
-    try {
-      const { data: { user }, error } = await supabase.auth.getUser()
-      
-      if (error || !user) {
-        window.location.href = '/auth/login'
-        return
+      setLoading(true)
+      try {
+        const localUserJson = localStorage.getItem('session_user')
+        if (!localUserJson) {
+          window.location.href = '/auth/login'
+          return
+        }
+        
+        let authUser: User | null = null;
+        try {
+          authUser = JSON.parse(localUserJson)
+        } catch {
+          localStorage.removeItem('session_user');
+          window.location.href = '/auth/login'
+          return;
+        }
+
+        if (!authUser) {
+            window.location.href = '/auth/login'
+            return;
+        }
+        
+        setUser(authUser)
+
+        const today = new Date().toISOString().split("T")[0]
+        const entry = await dataService.getDailyEntry(authUser.id, today)
+        setTodayEntry(entry)
+
+      } catch (error) {
+        console.error('Error loading dashboard:', error)
+      } finally {
+        setLoading(false)
       }
-
-      setUser(user)
-      
-      // Get today's entry if it exists
-      const today = new Date().toISOString().split("T")[0]
-      const { data: entry } = await supabase
-        .from("daily_entries")
-        .select("*")
-        .eq("user_id", user.id)
-        .eq("entry_date", today)
-        .single()
-
-      setTodayEntry(entry)
-    } catch (error) {
-      console.error('Error loading dashboard:', error)
-    } finally {
-      setLoading(false)
     }
-  }
+
+    loadDashboardData()
+  }, [])
 
   if (loading) {
     return (

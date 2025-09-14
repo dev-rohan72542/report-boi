@@ -11,6 +11,8 @@ import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 
+import { GoogleSignInButton } from "@/components/google-sign-in-button"
+
 export default function LoginPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -52,7 +54,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
+    <div className="flex min-h-svh w-full items-center justify-center p-4 sm:p-6 md:p-10">
       <div className="w-full max-w-sm">
         <Card>
           <CardHeader className="text-center">
@@ -87,6 +89,17 @@ export default function LoginPage() {
                 {isLoading ? "লগইন হচ্ছে..." : "লগইন"}
               </Button>
             </form>
+            <div className="relative my-4">
+              <div className="absolute inset-0 flex items-center">
+                <span className="w-full border-t" />
+              </div>
+              <div className="relative flex justify-center text-xs uppercase">
+                <span className="bg-card px-2 text-muted-foreground">
+                  অথবা
+                </span>
+              </div>
+            </div>
+            <GoogleSignInButton />
             <div className="mt-4 text-center text-sm">
               অ্যাকাউন্ট নেই?{" "}
               <Link href="/auth/sign-up" className="underline underline-offset-4">

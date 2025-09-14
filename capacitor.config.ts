@@ -4,11 +4,13 @@ const config: CapacitorConfig = {
   appId: 'com.reporttracker.app',
   appName: 'ReportTracker',
   webDir: 'out',
-  server: {
-    // androidScheme: 'https'
-    url: 'http://192.168.0.116:3000',
-    cleartext: true     
-  }
+  plugins: {
+    GoogleAuth: {
+      scopes: ['profile', 'email'],
+      serverClientId: '<YOUR_WEB_APP_CLIENT_ID_FROM_GOOGLE_CLOUD>',
+      forceCodeForRefreshToken: true,
+    },
+  },
 };
 
 export default config;

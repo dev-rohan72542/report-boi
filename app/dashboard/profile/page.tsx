@@ -5,6 +5,8 @@ import { createClient } from "@/lib/supabase/client"
 import { Button } from "@/components/ui/button"
 import { LogOut } from "lucide-react"
 import { OfflineIndicator } from "@/components/offline-indicator"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 export default function ProfilePage() {
   const [user, setUser] = useState<any>(null)
@@ -57,6 +59,11 @@ export default function ProfilePage() {
     return null
   }
 
+  const userAvatarUrl = user?.user_metadata?.avatar_url
+  const userEmail = user?.email || ""
+  const userName = user?.user_metadata?.full_name
+  const avatarFallback = (userName?.[0] || userEmail?.[0] || "U").toUpperCase()
+
   return (
     <div className="min-h-screen bg-background">
       <OfflineIndicator />
@@ -68,21 +75,42 @@ export default function ProfilePage() {
           </p>
         </div>
 
-        <div className="space-y-6">
-          <div className="p-4 border rounded-lg">
-            <p className="text-sm text-muted-foreground">Email</p>
-            <p className="font-semibold">{user.email}</p>
-          </div>
+        <Card>
+          <CardContent className="p-6 space-y-6">
+            <div className="flex items-center gap-6">
+              <Avatar className="h-24 w-24">
+                <AvatarImage src={userAvatarUrl} alt={userName || userEmail} />
+                <AvatarFallback>{avatarFallback}</AvatarFallback>
+              </Avatar>
+              <div className="space-y-1">
+                <h2 className="text-2xl font-semibold">{userName || 'User'}</h2>
+                <p className="text-muted-foreground">{userEmail}</p>
+              </div>
+            </div>
 
-          <Button 
-            variant="outline" 
-            className="w-full md:w-auto"
-            onClick={handleLogout}
-          >
-            <LogOut className="h-4 w-4 mr-2" />
-            লগআউট
-          </Button>
-        </div>
+            <div className="space-y-4">
+                <div className="p-4 border rounded-lg bg-muted/20">
+                    <p className="text-sm text-muted-foreground">Email</p>
+                    <p className="font-semibold">{userEmail}</p>
+                </div>
+                {userName && (
+                    <div className="p-4 border rounded-lg bg-muted/20">
+                        <p className="text-sm text-muted-foreground">Full Name</p>
+                        <p className="font-semibold">{userName}</p>
+                    </div>
+                )}
+            </div>
+
+            <Button 
+              variant="outline" 
+              className="w-full md:w-auto"
+              onClick={handleLogout}
+            >
+              <LogOut className="h-4 w-4 mr-2" />
+              লগআউট
+            </Button>
+          </CardContent>
+        </Card>
       </div>
     </div>
   )
