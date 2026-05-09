@@ -202,11 +202,12 @@ export function DailyEntryForm({ initialData, userId }: DailyEntryFormProps) {
         title: "সফলভাবে সংরক্ষিত!",
         description: "আজকের এন্ট্রি সংরক্ষণ করা হয়েছে।",
       })
-    } catch (error) {
-      console.error("Error saving entry:", error)
+    } catch (error: any) {
+      const errorMessage = error?.message || error?.details || JSON.stringify(error)
+      console.error("Error saving entry:", errorMessage, error)
       toast({
         title: "ত্রুটি!",
-        description: "এন্ট্রি সংরক্ষণে সমস্যা হয়েছে।",
+        description: errorMessage || "এন্ট্রি সংরক্ষণে সমস্যা হয়েছে।",
         variant: "destructive",
       })
     } finally {

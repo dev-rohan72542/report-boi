@@ -40,8 +40,14 @@ export default function SignUpPage() {
       }
 
       router.push("/auth/sign-up-success")
-    } catch (err) {
-      setError("An unexpected error occurred")
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : "An error occurred"
+      if (message === "Failed to fetch" || message.toLowerCase().includes("network")) {
+        setError("সার্ভারের সাথে সংযোগ করা যাচ্ছে না। ইন্টারনেট সংযোগ পরীক্ষা করুন অথবা পরে আবার চেষ্টা করুন।")
+      } else {
+        setError(message)
+      }
+    } finally {
       setLoading(false)
     }
   }
