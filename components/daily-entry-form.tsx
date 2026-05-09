@@ -10,6 +10,8 @@ import { Label } from "@/components/ui/label"
 import { useToast } from "@/hooks/use-toast"
 import { Save, BookOpen, Briefcase, Dumbbell, Users, Gift, FileText, Heart, ChevronDown, ChevronUp } from "lucide-react"
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
+import { EntryTemplatesDialog } from "@/components/entry-templates-dialog"
+import type { DailyEntryData } from "@/lib/services/hybrid-data-service"
 
 // --- Helper Components moved outside ---
 
@@ -160,6 +162,15 @@ export function DailyEntryForm({ initialData, userId }: DailyEntryFormProps) {
       setFormData((prev) => ({ ...prev, ...initialData }))
     }
   }, [initialData])
+
+  const handleApplyTemplate = (templateData: Partial<DailyEntryData>) => {
+    setFormData((prev) => ({ ...prev, ...templateData }))
+  }
+
+  const handleSaveTemplate = async (templateData: Partial<DailyEntryData>) => {
+    // This will be called if user clicks save template from dialog
+    handleApplyTemplate(templateData)
+  }
 
   const handleInputChange = (field: string, value: string) => {
     const numValue = Number.parseInt(value) || 0
@@ -318,16 +329,23 @@ export function DailyEntryForm({ initialData, userId }: DailyEntryFormProps) {
       </FormSection>
 
       <div className="sticky bottom-4 bg-background/95 backdrop-blur-sm border rounded-lg p-4 md:static md:bg-transparent md:backdrop-blur-none md:border-none md:p-0">
-        <Button type="submit" disabled={isLoading} size="lg" className="w-full md:w-auto md:min-w-32">
-          {isLoading ? (
-            "সংরক্ষণ হচ্ছে..."
-          ) : (
-            <>
-              <Save className="h-4 w-4 mr-2" />
-              সংরক্ষণ করুন
-            </>
-          )}
-        </Button>
+        <div className="flex gap-2 flex-wrap">
+          <EntryTemplatesDialog 
+            onApplyTemplate={handleApplyTemplate}
+            onSaveTemplate={handleSaveTemplate}
+            currentFormData={formData}
+          />
+          <Button type="submit" disabled={isLoading} size="lg" className="flex-1 md:flex-none md:min-w-32">
+            {isLoading ? (
+              "সংরক্ষণ হচ্ছে..."
+            ) : (
+              <>
+                <Save className="h-4 w-4 mr-2" />
+                সংরক্ষণ করুন
+              </>
+            )}
+          </Button>
+        </div>
       </div>
     </form>
   )
